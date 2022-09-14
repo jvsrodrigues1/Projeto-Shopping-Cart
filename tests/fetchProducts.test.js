@@ -16,8 +16,8 @@ describe('1 - Teste a função fetchProducts', () => {
     expect(fetch).toHaveBeenCalledWith('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   });
   test ('Executa a função fetchProducts com o argumento "computador" verifica se é uma estrutura de dados igual ao objeto computadorSearch', async ()=>{
-    await fetchProducts('computador');
-    expect(fetchProducts('computador')).toMatchObject(computadorSearch);
+    const call = await fetchProducts('computador');
+    expect(call).toMatchObject(computadorSearch);
   });
   test('Verifica se ao chamar a função fetchProducts sem parametro, retorna um erro com a mensagem: You must provide an url.', async () => {
     try{
