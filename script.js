@@ -31,13 +31,13 @@ const createCustomElement = (element, className, innerText) => {
 
 /**
  * Função responsável por criar e retornar o elemento do produto.
- * @param {newObject} product - newObjeto do produto. 
+ * @param {newObjectect} product - newObjecteto do produto. 
  * @param {string} product.id - ID do produto.
  * @param {string} product.title - Título do produto.
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
-const createProductItemElement = ({ id, title, thumbnail, price }) => {
+const createProductItemElement = ({ id, title, thumbnail }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -54,16 +54,18 @@ const createProductItemElement = ({ id, title, thumbnail, price }) => {
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
- const getIdFromProductItem = (product) => product.querySelector('span.item_id').innerText;
+
+const getIdFromProductItem = (product) => product.querySelector('span.item_id').innerText;
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
- * @param {newObject} product - newObjeto do produto.
+ * @param {newObjectect} product - newObjecteto do produto.
  * @param {string} product.id - ID do produto.
  * @param {string} product.title - Título do produto.
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
  cartItemClickListener = (event) => {
   event.target.remove();
  };
@@ -76,33 +78,33 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-const cartADD = async () => {
+const addToCart = async () => {
   await fetchItem('MLB1341706310');
-  const itensToAdd = document.querySelectorAll('.item__add');
-  itensToAdd.forEach((item) => {
+  const getAllItems = document.querySelectorAll('.item__add');
+  getAllItems.forEach((item) => {
     item.addEventListener('click', async (event) => {
       const target = event.target.parentNode.firstChild.innerText;
       const fetch2 = await fetchItem(target);
-      const getCarts = document.querySelector('.cart__items');
-      const newObj = {
+      const getAllCarts = document.querySelector('.cart__items');
+      const newObject = {
         id: fetch2.id,
         title: fetch2.title,
         price: fetch2.price,
       };
-      getCarts.appendChild(createCartItemElement(newObj));
+      getAllCarts.appendChild(createCartItemElement(newObject));
     });
   });
 };
 
-const loadNewObj = async () => {
-  const selector = document.querySelector('.items');
+const response = async () => {
+  const itemsSec = document.querySelector('.items');
   const data = await fetchProducts('computador');
   for (let index = 0; index < data.length; index += 1) {
-    selector.appendChild(createProductItemElement(data[index]));
+    itemsSec.appendChild(createProductItemElement(data[index]));
   }
-  cartADD();
+  addToCart();
 };
 
-window.onload = async () => { 
-  await loadNewObj();
+window.onload = async () => {
+  await response();
 };
