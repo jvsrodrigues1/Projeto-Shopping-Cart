@@ -8,18 +8,22 @@ describe('1 - Teste a função fetchProducts', () => {
     expect(typeof fetchProducts).toBe('function');
   });
   test ('Executa a função fetchProducts com o argumento "computador" verifica se fetch foi chamada', async ()=>{
+    expect.assertions(1);
     await fetchProducts('computador');
     expect(fetch).toHaveBeenCalled();
   });
   test ('Executa a função fetchProducts com o argumento "computador" verifica seu endpoint', async ()=>{
+    expect.assertions(1);
     await fetchProducts('computador');
     expect(fetch).toHaveBeenCalledWith('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   });
   test ('Executa a função fetchProducts com o argumento "computador" verifica se é uma estrutura de dados igual ao objeto computadorSearch', async ()=>{
+    expect.assertions(1);
     const call = await fetchProducts('computador');
     expect(call).toMatchObject(computadorSearch);
   });
   test('Verifica se ao chamar a função fetchProducts sem parametro, retorna um erro com a mensagem: You must provide an url.', async () => {
+    expect.assertions(1);
     try{
       await fetchProducts();
     }
