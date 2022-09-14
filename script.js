@@ -3,6 +3,8 @@
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
+const cartItems = document.querySelector('.cart__items');
+
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -70,6 +72,20 @@ const getIdFromProductItem = (product) => product.querySelector('span.item_id').
   event.target.remove();
  };
 
+ const loading = () => {
+  const loadSection = document.createElement('section');
+  loadSection.className = 'loading';
+  loadSection.innerText = 'Carregando...';
+  const secItems = document.querySelector('.items');
+  secItems.appendChild(loadSection);
+};
+
+const loadingDone = () => {
+  const loadSection = document.querySelector('.loading');
+  console.log(loadSection);
+  loadSection.remove();
+};
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -98,12 +114,23 @@ const addToCart = async () => {
 
 const response = async () => {
   const itemsSec = document.querySelector('.items');
+  loading();
   const data = await fetchProducts('computador');
+  loadingDone();
   for (let index = 0; index < data.length; index += 1) {
     itemsSec.appendChild(createProductItemElement(data[index]));
   }
   addToCart();
 };
+
+const emptyCart = () => {
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', () => {
+    cartItems.innerHTML = '';
+   });
+  };
+
+  emptyCart();
 
 window.onload = async () => {
   await response();
