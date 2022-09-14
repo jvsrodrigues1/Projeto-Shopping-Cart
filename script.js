@@ -97,14 +97,15 @@ const addToCart = async () => {
 };
 
 const response = async () => {
-  const itemsSec = document.querySelector('.items');
+  const itemSelector = document.querySelector('.items');
   const data = await fetchProducts('computador');
   for (let index = 0; index < data.length; index += 1) {
-    itemsSec.appendChild(createProductItemElement(data[index]));
+    itemSelector.appendChild(createProductItemElement(data[index]));
   }
   addToCart();
 };
 
 window.onload = async () => {
   await response();
+  liEvent.innerHTML = getSavedCartItems('cartItems');
 };

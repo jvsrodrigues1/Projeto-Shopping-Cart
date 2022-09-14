@@ -19,8 +19,7 @@ describe('1 - Teste a função fetchProducts', () => {
   });
   test ('Executa a função fetchProducts com o argumento "computador" verifica se é uma estrutura de dados igual ao objeto computadorSearch', async ()=>{
     expect.assertions(1);
-    const call = await fetchProducts('computador');
-    expect(call).toMatchObject(computadorSearch);
+    expect(await fetchProducts('computador')).toEqual(computadorSearch);
   });
   test('Verifica se ao chamar a função fetchProducts sem parametro, retorna um erro com a mensagem: You must provide an url.', async () => {
     expect.assertions(1);
