@@ -37,17 +37,48 @@ const createCustomElement = (element, className, innerText) => {
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
-const createProductItemElement = ({ id, title, thumbnail, price }) => {
+const createProductItemElement = ({ sku, title, thumbnail, price }) => {
   const section = document.createElement('section');
   section.className = 'item';
-  
-  section.appendChild(createCustomElement('span', 'item_id', id));
+
+  section.appendChild(createCustomElement('span', 'item_sku', sku));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createCustomElement('span', 'item__price', price));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho'));
+  const secItems = document.querySelector('.items');
+  secItems.appendChild(section);
 
   return section;
+};
+const createLoading = () => {
+  const sectioLoad = document.createElement('section');
+  sectioLoad.className = 'loading';
+  sectioLoad.innerText = 'Carregando...';
+  const secItems = document.querySelector('.items');
+  secItems.appendChild(sectioLoad);
+};
+
+const removeLoading = () => {
+  const sectioLoad = document.querySelector('.loading');
+  console.log(sectioLoad);
+  sectioLoad.remove();
+};
+
+const getProducts = async () => {
+  createLoading();
+  const data = await fetchProducts('computador');
+  removeLoading();
+  const { results } = data;
+  results.forEach(({ id: sku, title: name, thumbnail: image, price }) => {
+    const newObj = {
+      sku,
+      name,
+      image,
+      price,
+    };
+    createProductItemElement(newObj);
+  });
 };
 
 /**
@@ -65,6 +96,11 @@ const createProductItemElement = ({ id, title, thumbnail, price }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
+ function cartItemClickListener(event) {
+  event.target.remove();
+}
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -73,4 +109,5 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
+getProducts();
 window.onload = () => { };
