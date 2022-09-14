@@ -31,54 +31,22 @@ const createCustomElement = (element, className, innerText) => {
 
 /**
  * Função responsável por criar e retornar o elemento do produto.
- * @param {Object} product - Objeto do produto. 
+ * @param {newObject} product - newObjeto do produto. 
  * @param {string} product.id - ID do produto.
  * @param {string} product.title - Título do produto.
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
-const createProductItemElement = ({ sku, title, thumbnail, price }) => {
+const createProductItemElement = ({ id, title, thumbnail, price }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
-  section.appendChild(createCustomElement('span', 'item_sku', sku));
-  section.appendChild(createProductImageElement(thumbnail));
+  section.appendChild(createCustomElement('span', 'item_id', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
-  section.appendChild(createCustomElement('span', 'item__price', price));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho'));
-  const secItems = document.querySelector('.items');
-  secItems.appendChild(section);
+  section.appendChild(createProductImageElement(thumbnail));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
-};
-const createLoading = () => {
-  const sectioLoad = document.createElement('section');
-  sectioLoad.className = 'loading';
-  sectioLoad.innerText = 'Carregando...';
-  const secItems = document.querySelector('.items');
-  secItems.appendChild(sectioLoad);
-};
-
-const removeLoading = () => {
-  const sectioLoad = document.querySelector('.loading');
-  console.log(sectioLoad);
-  sectioLoad.remove();
-};
-
-const getProducts = async () => {
-  createLoading();
-  const data = await fetchProducts('computador');
-  removeLoading();
-  const { results } = data;
-  results.forEach(({ id: sku, title: name, thumbnail: image, price }) => {
-    const newObj = {
-      sku,
-      name,
-      image,
-      price,
-    };
-    createProductItemElement(newObj);
-  });
 };
 
 /**
@@ -90,16 +58,15 @@ const getProducts = async () => {
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
- * @param {Object} product - Objeto do produto.
+ * @param {newObject} product - newObjeto do produto.
  * @param {string} product.id - ID do produto.
  * @param {string} product.title - Título do produto.
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
-
- function cartItemClickListener(event) {
+ cartItemClickListener = (event) => {
   event.target.remove();
-}
+ };
 
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
@@ -109,5 +76,33 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-getProducts();
-window.onload = () => { };
+const cartADD = async () => {
+  await fetchItem('MLB1341706310');
+  const itensToAdd = document.querySelectorAll('.item__add');
+  itensToAdd.forEach((item) => {
+    item.addEventListener('click', async (event) => {
+      const target = event.target.parentNode.firstChild.innerText;
+      const fetch2 = await fetchItem(target);
+      const getCarts = document.querySelector('.cart__items');
+      const newObj = {
+        id: fetch2.id,
+        title: fetch2.title,
+        price: fetch2.price,
+      };
+      getCarts.appendChild(createCartItemElement(newObj));
+    });
+  });
+};
+
+const loadNewObj = async () => {
+  const selector = document.querySelector('.items');
+  const data = await fetchProducts('computador');
+  for (let index = 0; index < data.length; index += 1) {
+    selector.appendChild(createProductItemElement(data[index]));
+  }
+  cartADD();
+};
+
+window.onload = async () => { 
+  await loadNewObj();
+};
