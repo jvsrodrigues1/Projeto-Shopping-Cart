@@ -1,13 +1,9 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
-// const getSavedCartItems = require('./helpers/getSavedCartItems');
-// const saveCartItems = require('./helpers/saveCartItems');
-
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
 const cartItems = document.querySelector('.cart__items');
-const totalValue = document.querySelector('.total-price');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -98,27 +94,20 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-const addToCart = async (id) => {
-  const currentValue = totalValue.innerText.split(': ')[1];
-  const fetch2 = await fetchItem(id);
-  const getAllCarts = document.querySelector('.cart__items');
-  const newObject = {
-    id: fetch2.id,
-    title: fetch2.title,
-    price: fetch2.price,
-  };
-  totalValue.innerText = `Total: ${Number(currentValue) + fetch2.price}`;
-  getAllCarts.appendChild(createCartItemElement(newObject));
-  saveCartItems(id);
-};
-
-const addToCartEventListener = async () => {
+const addToCart = async () => {
   await fetchItem('MLB1341706310');
   const getAllItems = document.querySelectorAll('.item__add');
   getAllItems.forEach((item) => {
     item.addEventListener('click', async (event) => {
       const target = event.target.parentNode.firstChild.innerText;
-      addToCart(target);
+      const fetch2 = await fetchItem(target);
+      const getAllCarts = document.querySelector('.cart__items');
+      const newObject = {
+        id: fetch2.id,
+        title: fetch2.title,
+        price: fetch2.price,
+      };
+      getAllCarts.appendChild(createCartItemElement(newObject));
     });
   });
 };
@@ -131,15 +120,13 @@ const response = async () => {
   for (let index = 0; index < data.length; index += 1) {
     itemsSec.appendChild(createProductItemElement(data[index]));
   }
-  addToCartEventListener();
+  addToCart();
 };
 
 const emptyCart = () => {
   const emptyButton = document.querySelector('.empty-cart');
   emptyButton.addEventListener('click', () => {
     cartItems.innerHTML = '';
-    totalValue.innerText = 'Total: 0';
-    localStorage.setItem('cartItems', []);
    });
   };
 
@@ -147,8 +134,4 @@ const emptyCart = () => {
 
 window.onload = async () => {
   await response();
-  getSavedCartItems().split(',').forEach((cartItem) => {
-    console.log(cartItem);
-    addToCart(cartItem);
-  });
 };
